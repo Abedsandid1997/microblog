@@ -10,7 +10,7 @@ on:
 jobs:
 
   ci:
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/test_validate.yml
 
   
   build_and_push:
