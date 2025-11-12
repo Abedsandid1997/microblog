@@ -10,15 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [11.2.1] - 2025-11-12
 
 ### Added
+
 - Added a dedicated test Dockerfile (`docker/Dockerfile_test`) to run automated tests.
 - Added startup script to execute `make test` when the test container starts.
 - Added new `test` service in `docker-compose.yml` to run tests via `docker-compose up test`.
+- Added test nad push workflow in github action (CD).
 
 ### Changed
+
 - Updated Docker setup validation with `make validate-docker`.
 - Configured container to mount `app` and `tests` directories as volumes instead of copying files.
 
 ### Notes
+
 - The test container installs dependencies from `requirements/test.txt`.
 - Tests automatically execute on container startup and the container stops afterward.
 
