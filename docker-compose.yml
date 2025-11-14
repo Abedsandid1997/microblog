@@ -14,7 +14,7 @@ services:
       - microblog-net
 
   prod:
-    image: abedsandeed/microblog:1.0.0-prod
+    image: abedsandeed/microblog:prod
     container_name: microblog-prod
     restart: always
     environment:
