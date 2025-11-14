@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.3.3] - 2025-11-14
+
 ### Added
+
 - Added followers association table (`app/models.py`).
 - Added `follow()`, `unfollow()`, and `is_following()` methods to User mode (`app.user`).
 - Added `followed_posts()` method to retrieve posts from followed users.
@@ -16,10 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added unit tests for follow functionality (`tests/unit/models/test_follow.py`)
 
 ### Changed
+
 - Updated database schema with followers table via Flask-Migrate.
 - Modified User model to include follower relationships.
 - Updated index route to display posts from followed users.
 - Enhanced user profile template with follower statistics.
+
 ## [11.2.3] - 2025-11-12
 
 ### Changed
