@@ -1,0 +1,40 @@
+name: Continuous Delivery - Build & Push to Docker Hub
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    paths:
+      - "docker/Dockerfile_prod"
+
+jobs:
+
+  ci:
+    uses: ./.github/workflows/test_validate.yml
+
+  
+  build_and_push:
+    needs: ci
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/microblog:${{ steps.get_version.outputs.version }}-prod \
+                       -t ${{ secrets.DOCKERHUB_USERNAME }}/microblog:prod \
+                       -f docker/Dockerfile_prod .
+
+      - name: Push Docker image
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/microblog:${{ steps.get_version.outputs.version }}-prod
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/microblog:prod
+          

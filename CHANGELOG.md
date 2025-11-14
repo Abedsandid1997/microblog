@@ -20,19 +20,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modified User model to include follower relationships.
 - Updated index route to display posts from followed users.
 - Enhanced user profile template with follower statistics.
+## [11.2.3] - 2025-11-12
+
+### Changed
+
+-Updated test gworkflow
+
+## [11.2.2] - 2025-11-12
+
+### Added
+
+- Added test and validate workflow in github action (CD).
 
 ## [11.2.1] - 2025-11-12
 
 ### Added
+
 - Added a dedicated test Dockerfile (`docker/Dockerfile_test`) to run automated tests.
 - Added startup script to execute `make test` when the test container starts.
 - Added new `test` service in `docker-compose.yml` to run tests via `docker-compose up test`.
 
 ### Changed
+
 - Updated Docker setup validation with `make validate-docker`.
 - Configured container to mount `app` and `tests` directories as volumes instead of copying files.
 
 ### Notes
+
 - The test container installs dependencies from `requirements/test.txt`.
 - Tests automatically execute on container startup and the container stops afterward.
 
