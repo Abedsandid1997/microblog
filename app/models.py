@@ -33,18 +33,29 @@ class User(UserMixin, db.Model):
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
 
     def follow(self, user):
+        """
+        follow a user
+        """
         if not self.is_following(user):
             self.followed.append(user)
 
     def unfollow(self, user):
+        """
+        unfollow a user"""
         if self.is_following(user):
             self.followed.remove(user)
 
     def is_following(self, user):
+        """
+        check if following user
+        """
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
-    
+
     def followed_posts(self):
+        """
+        Return posts from followed users and own posts
+        """
         followed = Post.query.join(
             followers, (followers.c.followed_id == Post.user_id)).filter(
                 followers.c.follower_id == self.id)
