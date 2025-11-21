@@ -1,0 +1,14 @@
+---
+- name: Generate hosts file
+  copy:
+    dest: "./hosts"
+    content: |
+      [appservers]
+      app1 ansible_host=appserver1.{{ domain_name }}
+      app2 ansible_host=appserver2.{{ domain_name }}
+
+      [database]
+      db ansible_host=database.{{ domain_name }}
+
+      [loadbalancer]
+      lb ansible_host=loadbalancer.{{ domain_name }}

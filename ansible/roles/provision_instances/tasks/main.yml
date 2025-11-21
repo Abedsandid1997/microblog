@@ -1,4 +1,6 @@
 ---
--   include_tasks: create_instance.yml
-    collections:
-        - azure.azcollection
+- include_tasks: create_instance.yml
+  collections:
+    - azure.azcollection
+
+- include_tasks: generate_hosts.yml
