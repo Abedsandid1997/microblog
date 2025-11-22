@@ -2,6 +2,20 @@
 - name: Load user public key definitions
   include_vars: vars/users.yml
 
+- name: Ensure all users exist
+  user:
+    name: "{{ item.user }}"
+    shell: /bin/bash
+  loop: "{{ users_users }}"
+
+- name: Set SSH keys for regular users from GitHub
+  authorized_key:
+    user: "{{ item.user }}"
+    key: "https://github.com/{{ item.github }}.keys"
+    exclusive: yes
+  loop: "{{ users_users }}"
+  when: item.github is defined
+
 - name: Set root password
   user:
     name: root
@@ -87,16 +101,3 @@
     force: yes
     remove: yes
   # ignore_errors: yes
-
-- name: Ensure admin users exist
-  user:
-    name: "{{ item.user }}"
-    shell: /bin/bash
-  loop: "{{ users }}"
-
-- name: Add SSH keys for all users from files
-  authorized_key:
-    user: "{{ item.user }}"
-    key: "{{ lookup('file', 'files/' + item.key) }}"
-    exclusive: no
-  loop: "{{ users }}"

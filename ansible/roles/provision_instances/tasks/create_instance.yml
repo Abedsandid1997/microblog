@@ -21,7 +21,8 @@
     ip_configurations:
       - name: ipconfig1
         public_ip_address_name: "{{ iname }}-ip"
-    security_group: "{{ itype == 'appserver' | ternary('appservers-sg', itype + '-sg') }}"
+    # security_group: "{{ itype == 'appserver' | ternary('appservers-sg', itype + '-sg') }}"
+    security_group: "{{ itype }}-sg"
     tags: "{{ vmtags }}"
 
 - name: Ensure "A" records for loadbalancer
@@ -39,6 +40,31 @@
     loop_var: relative_name
   delegate_to: 127.0.0.1
 
+# # DNS för appserver1 och appserver2
+# - name: Ensure A record for appserver1
+#   azure_rm_dnsrecordset:
+#     resource_group: "{{ resource_group }}"
+#     relative_name: "appserver1"
+#     zone_name: "{{ domain_name }}"
+#     record_type: A
+#     state: present
+#     records:
+#       - entry: "{{ output_ip_address.state.ip_address }}"
+#   when: iname == 'appserver1'
+#   delegate_to: 127.0.0.1
+
+# - name: Ensure A record for appserver2
+#   azure_rm_dnsrecordset:
+#     resource_group: "{{ resource_group }}"
+#     relative_name: "appserver2"
+#     zone_name: "{{ domain_name }}"
+#     record_type: A
+#     state: present
+#     records:
+#       - entry: "{{ output_ip_address.state.ip_address }}"
+#   when: iname == 'appserver2'
+#   delegate_to: 127.0.0.1
+
 # DNS för appserver1 och appserver2
 - name: Ensure A record for appserver1
   azure_rm_dnsrecordset:
@@ -52,10 +78,34 @@
   when: iname == 'appserver1'
   delegate_to: 127.0.0.1
 
+- name: Ensure www record for appserver1
+  azure_rm_dnsrecordset:
+    resource_group: "{{ resource_group }}"
+    relative_name: "www.appserver1"
+    zone_name: "{{ domain_name }}"
+    record_type: A
+    state: present
+    records:
+      - entry: "{{ output_ip_address.state.ip_address }}"
+  when: iname == 'appserver1'
+  delegate_to: 127.0.0.1
+
 - name: Ensure A record for appserver2
   azure_rm_dnsrecordset:
     resource_group: "{{ resource_group }}"
     relative_name: "appserver2"
+    zone_name: "{{ domain_name }}"
+    record_type: A
+    state: present
+    records:
+      - entry: "{{ output_ip_address.state.ip_address }}"
+  when: iname == 'appserver2'
+  delegate_to: 127.0.0.1
+
+- name: Ensure www record for appserver2
+  azure_rm_dnsrecordset:
+    resource_group: "{{ resource_group }}"
+    relative_name: "www.appserver2"
     zone_name: "{{ domain_name }}"
     record_type: A
     state: present

@@ -3,6 +3,9 @@
   copy:
     dest: "./hosts"
     content: |
+      [local]
+      localhost ansible_connection=local
+
       [appservers]
       app1 ansible_host=appserver1.{{ domain_name }}
       app2 ansible_host=appserver2.{{ domain_name }}
