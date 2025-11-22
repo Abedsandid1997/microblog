@@ -1,12 +1,2 @@
 [local]
 localhost ansible_connection=local
-
-[appservers]
-app1 ansible_host=appserver1.absn23.me
-app2 ansible_host=appserver2.absn23.me
-
-[database]
-db ansible_host=database.absn23.me
-
-[loadbalancer]
-lb ansible_host=loadbalancer.absn23.me

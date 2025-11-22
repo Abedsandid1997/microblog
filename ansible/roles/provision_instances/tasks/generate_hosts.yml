@@ -15,3 +15,12 @@
 
       [loadbalancer]
       lb ansible_host=loadbalancer.{{ domain_name }}
+  when: mode == "provision"
+
+- name: Reset hosts file to only local
+  copy:
+    dest: "./hosts"
+    content: |
+      [local]
+      localhost ansible_connection=local
+  when: mode == "terminate"
