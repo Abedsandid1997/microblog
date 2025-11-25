@@ -1,2 +1,5 @@
 [local]
 localhost ansible_connection=local
+[appservers]
+appserver1-sub ansible_host=appserver1.absn23.me
+appserver2-sub ansible_host=appserver2.absn23.me

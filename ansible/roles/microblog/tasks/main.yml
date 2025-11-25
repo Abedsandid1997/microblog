@@ -1,0 +1,26 @@
+- name: Install MariaDB client on appserver
+  ansible.builtin.apt:
+    name: mariadb-client
+    state: present
+    update_cache: yes
+
+- name: Wait until MySQL is fully ready
+  shell: |
+    until mysql -h {{ groups.database[0] }} -u microblog -p{{ mysql_microblog_password }} -e "SELECT 1"; do
+      echo "Waiting for MySQL..."
+      sleep 5
+    done
+  register: mysql_ready
+  until: mysql_ready is succeeded
+  retries: 20
+  delay: 5
+- name: Start Microblog container
+  docker_container:
+    name: microblog
+    image: abedsandeed/microblog:prod
+    state: started
+    restart_policy: always
+    env:
+      DATABASE_URL: "mysql+pymysql://microblog:{{ mysql_microblog_password }}@{{ groups.database[0] }}:3306/microblog"
+    ports:
+      - "8000:5000"

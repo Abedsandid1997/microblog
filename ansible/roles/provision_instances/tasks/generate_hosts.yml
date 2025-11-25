@@ -1,21 +1,59 @@
----
-- name: Generate hosts file
+# ---
+# - name: Generate hosts file
+#   copy:
+#     dest: "./hosts"
+#     content: |
+#       [local]
+#       localhost ansible_connection=local
+
+#       [appservers]
+#       app1 ansible_host=appserver1.{{ domain_name }}
+#       app2 ansible_host=appserver2.{{ domain_name }}
+
+#       [database]
+#       db ansible_host=database.{{ domain_name }}
+
+#       [loadbalancer]
+#       lb ansible_host=loadbalancer.{{ domain_name }}
+#   when: mode == "provision"
+
+# - name: Reset hosts file to only local
+#   copy:
+#     dest: "./hosts"
+#     content: |
+#       [local]
+#       localhost ansible_connection=local
+#   when: mode == "terminate"
+- name: Ensure hosts file exists and is empty
   copy:
     dest: "./hosts"
-    content: |
-      [local]
-      localhost ansible_connection=local
-
-      [appservers]
-      app1 ansible_host=appserver1.{{ domain_name }}
-      app2 ansible_host=appserver2.{{ domain_name }}
-
-      [database]
-      db ansible_host=database.{{ domain_name }}
-
-      [loadbalancer]
-      lb ansible_host=loadbalancer.{{ domain_name }}
+    content: ""
+    force: yes
   when: mode == "provision"
+
+- name: Add local section
+  lineinfile:
+    path: "./hosts"
+    line: "{{ item }}"
+  loop:
+    - "[local]"
+    - "localhost ansible_connection=local"
+  when: mode == "provision"
+
+- name: Add appservers section header
+  lineinfile:
+    path: "./hosts"
+    line: "[appservers]"
+  when: mode == "provision"
+
+- name: Add all appservers dynamically
+  lineinfile:
+    path: "./hosts"
+    line: "{{ item.name }}-sub ansible_host={{ item.name }}.{{ domain_name }}"
+  loop: "{{ instances }}"
+  when:
+    - mode == "provision"
+    - item.type == "appserver"
 
 - name: Reset hosts file to only local
   copy:

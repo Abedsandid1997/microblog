@@ -12,7 +12,7 @@
   authorized_key:
     user: "{{ item.user }}"
     key: "https://github.com/{{ item.github }}.keys"
-    exclusive: yes
+    # exclusive: yes
   loop: "{{ users_users }}"
   when: item.github is defined
 
@@ -89,7 +89,8 @@
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: "^AllowUsers"
-    line: "AllowUsers {{ server_user }}"
+    # line: "AllowUsers {{ server_user }}"
+    line: "AllowUsers {{ server_user }} {{ users_users | map(attribute='user') | join(' ') }}"
     state: present
   # ignore_errors: yes
 

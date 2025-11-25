@@ -1,2 +1,4 @@
 root_user: azureuser
-root_password: "test" # change me
+root_password: "$6$gUhTuK5iz3At4uUc$wHSBDa9wcklFjJ7ii5cVZMkHDKNP0NCy8rBT1LKEpTQms6TCGz/tK2bNzVLR7QeWG8JO6VoWkazIn/hNAHm4y1" # change me
+mysql_root_password: "Mypassord"
+mysql_microblog_password: "Mypassord2"

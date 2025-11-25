@@ -14,6 +14,6 @@ vmtags:
 pub_ssh_key_location: "/home/abed/.ssh/azure_microblog.pub" # Change me, your local ssh key!
 
 server_user: "deploy"
-server_user_pass: "Mypassord" # change me
+server_user_pass: "$6$XftSV2Q0TJTxcVG5$QRmDf/kYi/M0tjuGStimxIznrqQbwDW8B7VXraMyfp65cgmVmlyOS28IBnqKmQsuQwPL5eAmCPiKhJBoRGCOK/" # change me
 server_user_groups:
   - sudo

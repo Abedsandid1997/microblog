@@ -10,7 +10,5 @@ instances:
     type: loadbalancer
 
 relative_names:
-  - name: appserver1
-  - name: appserver2
   - name: www # www.<domain>
   - name: "@" # so <domain> works as a URL. Otherwise only www.<domain> would work.
