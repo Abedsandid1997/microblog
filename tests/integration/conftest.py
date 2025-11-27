@@ -3,6 +3,7 @@ Fixtures for integration tests
 """
 # pylint: disable=redefined-outer-name,unused-argument
 import pytest
+# from app import create_app
 
 @pytest.fixture
 def user_dict():
@@ -70,3 +71,12 @@ def user_post_response(client, login_user_response, user_dict, post_dict):
         follow_redirects=True,
     )
     return response
+
+
+@pytest.fixture
+def app_version_response(client):
+    """
+    Set APP_VERSION directly on client.application for testing /version route.
+    """
+    client.application.config["APP_VERSION"] = "test-version"
+    return client
