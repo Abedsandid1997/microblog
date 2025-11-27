@@ -1,0 +1,38 @@
+- name: Ensure hosts file exists and is empty
+  copy:
+    dest: "./hosts"
+    content: ""
+    force: yes
+  when: mode == "provision"
+
+- name: Add local section
+  lineinfile:
+    path: "./hosts"
+    line: "{{ item }}"
+  loop:
+    - "[local]"
+    - "localhost ansible_connection=local"
+  when: mode == "provision"
+
+- name: Add appservers section header
+  lineinfile:
+    path: "./hosts"
+    line: "[appservers]"
+  when: mode == "provision"
+
+- name: Add all appservers dynamically
+  lineinfile:
+    path: "./hosts"
+    line: "{{ item.name }}-sub ansible_host={{ item.name }}.{{ domain_name }}"
+  loop: "{{ instances }}"
+  when:
+    - mode == "provision"
+    - item.type == "appserver"
+
+- name: Reset hosts file to only local
+  copy:
+    dest: "./hosts"
+    content: |
+      [local]
+      localhost ansible_connection=local
+  when: mode == "terminate"

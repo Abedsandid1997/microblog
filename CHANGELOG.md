@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Add
+
+- Added playbook to deploy MySQL in Docker with persistent volume
+- Added playbook to deploy Microblog container linked to the MySQL host
+- Updated load balancer configuration to dynamically include all appservers
+  via upstream generation.
+
 ## [11.3.4] - 2025-11-14
 
 ### Fixed
