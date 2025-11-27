@@ -9,7 +9,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -20,27 +19,28 @@ jobs:
       with:
         python-version: "3.9"
         cache: 'pip'
-        cache-dependency-path: |
-          requirements/deploy.txt
-          ansible/requirements.yml
+        cache-dependency-path: 'requirements/deploy.txt'
 
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements/deploy.txt
         pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
-        cd ansible && ansible-galaxy install -r requirements.yml
 
     - name: Setup SSH 
-      shell: bash
       run: |
-        eval `ssh-agent -s`
-        mkdir -p /home/runner/.ssh/
-        touch /home/runner/.ssh/id_rsa
-        echo -e "${{secrets.SSH_PRIVATE_KEY}}" > /home/runner/.ssh/id_rsa
-        chmod 700 /home/runner/.ssh/id_rsa
+        eval "$(ssh-agent -s)"
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 700 ~/.ssh/id_rsa 
+        ssh-add ~/.ssh/id_rsa
+
+    - name: Install Ansible Galaxy dependencies
+      run: |
+        cd ansible && ansible-galaxy install -r requirements.yml
 
     - name: Run playbook
-      run: cd ansible/ && ansible-playbook gather_instances.yml microblog.yml --private-key=/home/runner/.ssh/id_rsa
+      run: |
+        cd ansible/ && ansible-playbook gather_instances.yml microblog.yml --private-key=/home/runner/.ssh/id_rsa
       env:
         ANSIBLE_HOST_KEY_CHECKING: "False"
