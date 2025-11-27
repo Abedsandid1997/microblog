@@ -9,6 +9,9 @@ COPY migrations migrations
 COPY requirements requirements
 COPY requirements.txt microblog.py boot.sh ./
 
+ARG APP_VERSION="unknown"
+
+ENV APP_VERSION=${APP_VERSION}
 
 RUN <<-EOF
     python -m venv .venv
