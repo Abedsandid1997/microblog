@@ -5,30 +5,32 @@ on:
   push:
     branches: [ "master","feat/ansible" ]
   pull_request:
-    branches: [ "master","feat/ansible"  ]
+    branches: [ "master" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Cache pip
+    - name: Setup Python & Cache pip
       uses: actions/setup-python@v3
       with:
         python-version: "3.9"
         cache: 'pip'
-        cache-dependency-path: |
-          requirements/deploy.txt
-          ansible/requirements.yml
+        cache-dependency-path: requirements/deploy.txt
+
+    - name: Cache Ansible Galaxy
+      uses: actions/cache@v3
+      with:
+        path: ~/.ansible
+        key: ansible-${{ hashFiles('ansible/requirements.yml') }}
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements/deploy.txt
-        pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
         cd ansible && ansible-galaxy install -r requirements.yml
 
     - name: Setup SSH 
@@ -41,6 +43,6 @@ jobs:
         chmod 700 /home/runner/.ssh/id_rsa
 
     - name: Run playbook
-      run: cd ansible/ && ansible-playbook  gather_instances.yml microblog.yml --private-key=/home/runner/.ssh/id_rsa
+      run: cd ansible/ && ansible-playbook gather_instances.yml microblog.yml --private-key=/home/runner/.ssh/id_rsa
       env:
         ANSIBLE_HOST_KEY_CHECKING: "False"
