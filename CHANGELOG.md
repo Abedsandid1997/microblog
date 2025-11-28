@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added playbook to deploy Microblog container linked to the MySQL host
 - Updated load balancer configuration to dynamically include all appservers
   via upstream generation.
+- Added a new Ansible playbook `deploy_update` that performs rolling updates
+- on application servers. This ensures minimal downtime during deployments
+- and updates the servers in a controlled sequence
 
 ## [11.3.4] - 2025-11-14
 
