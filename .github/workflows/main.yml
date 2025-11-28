@@ -28,7 +28,7 @@ jobs:
         
     - name: Install Azure Python SDK for Ansible
       run: |
-        sudo python3 -m pip install "ansible[azure]"
+        python3 -m pip install "ansible[azure]"
 
     - name: Install Ansible Galaxy collections
       run: |
