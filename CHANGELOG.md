@@ -21,6 +21,10 @@ feat(site): Add database and microblog playbooks, store DATABASE_URL in .env
 - Added playbook to deploy Microblog container linked to the MySQL host
 - Updated load balancer configuration to dynamically include all appservers
   via upstream generation.
+- Added a new Ansible playbook `deploy_update` that performs rolling updates
+- on application servers. This ensures minimal downtime during deployments
+- and updates the servers in a controlled sequence
+- pass microblog tag as argument to deploy_update.yml
 
 ## [11.3.4] - 2025-11-14
 

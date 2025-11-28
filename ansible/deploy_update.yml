@@ -1,0 +1,54 @@
+---
+- hosts: appservers
+  remote_user: "deploy"
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  serial: 1
+  vars:
+    microblog_container_name: microblog
+    microblog_image_prefix: abedsandeed/microblog
+    env_file_path: "./.env"
+    healthcheck_url: "http://{{ hostvars[inventory_hostname].ansible_host }}:8000/version"
+    microblog_tag: "{{ microblog_tag | default('1.0.0-prod') }}"
+
+  tasks:
+    - name: Pull latest Microblog image for this server
+      docker_image:
+        name: "{{ microblog_image_prefix }}:{{ microblog_tag }}"
+        source: pull
+
+    - name: Stop old Microblog container
+      docker_container:
+        name: "{{ microblog_container_name }}"
+        state: stopped
+      ignore_errors: yes
+
+    - name: Start new Microblog container with new image
+      docker_container:
+        name: "{{ microblog_container_name }}"
+        image: "{{ microblog_image_prefix }}:{{ microblog_tag }}"
+        state: started
+        restart_policy: always
+        env_file: "{{ env_file_path }}"
+        ports:
+          - "8000:5000"
+
+    - name: Wait for Microblog to be healthy
+      uri:
+        url: "{{ healthcheck_url }}"
+        method: GET
+        status_code: 200
+      register: result
+      retries: 10
+      delay: 5
+      until: result.status == 200
+
+    - name: Verify running Microblog version
+      shell: curl -s "{{ healthcheck_url }}"
+      register: version_result
+
+    - name: Fail if version mismatch
+      fail:
+        msg: "Microblog version mismatch! Expected {{ microblog_tag }}, got {{ version_result.stdout }}"
+      when: version_result.stdout != microblog_tag
