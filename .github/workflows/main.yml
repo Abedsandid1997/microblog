@@ -1,15 +1,18 @@
 name: Deploy microblog
 
 on:
-  workflow_call:
+  workflow_run:
+    workflows: ["Continuous Delivery - Build & Push to Docker Hub"]
+    types:
+      - completed
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+      - 'v*.*.*'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || startsWith(github.ref, 'refs/tags/') }}
 
     steps:
     - uses: actions/checkout@v4
@@ -40,6 +43,6 @@ jobs:
     - name: Run deploy playbook
       run: |
         cd ansible/
-        ansible-playbook -i hosts deploy_update.yml --private-key=/home/runner/.ssh/id_rsa
+        ansible-playbook -i hosts deploy_update.yml --private-key=/home/runner/.ssh/id_rsa -e "microblog_tag=${GITHUB_REF#refs/tags/}"
       env:
         ANSIBLE_HOST_KEY_CHECKING: "False"
