@@ -21,7 +21,6 @@
     ip_configurations:
       - name: ipconfig1
         public_ip_address_name: "{{ iname }}-ip"
-    # security_group: "{{ itype == 'appserver' | ternary('appservers-sg', itype + '-sg') }}"
     security_group: "{{ itype }}-sg"
     tags: "{{ vmtags }}"
 
@@ -44,26 +43,26 @@
 - name: Ensure A record for appserver1
   azure_rm_dnsrecordset:
     resource_group: "{{ resource_group }}"
-    relative_name: "appserver1"
+    relative_name: "{{ iname }}"
     zone_name: "{{ domain_name }}"
     record_type: A
     state: present
     records:
       - entry: "{{ output_ip_address.state.ip_address }}"
-  when: iname == 'appserver1'
+  when: itype == 'appserver'
   delegate_to: 127.0.0.1
 
-- name: Ensure A record for appserver2
-  azure_rm_dnsrecordset:
-    resource_group: "{{ resource_group }}"
-    relative_name: "appserver2"
-    zone_name: "{{ domain_name }}"
-    record_type: A
-    state: present
-    records:
-      - entry: "{{ output_ip_address.state.ip_address }}"
-  when: iname == 'appserver2'
-  delegate_to: 127.0.0.1
+# - name: Ensure A record for appserver2
+#   azure_rm_dnsrecordset:
+#     resource_group: "{{ resource_group }}"
+#     relative_name: "appserver2"
+#     zone_name: "{{ domain_name }}"
+#     record_type: A
+#     state: present
+#     records:
+#       - entry: "{{ output_ip_address.state.ip_address }}"
+#   when: iname == 'appserver2'
+#   delegate_to: 127.0.0.1
 
 - name: Create VM
   azure_rm_virtualmachine:
