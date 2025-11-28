@@ -10,11 +10,12 @@
     microblog_image_prefix: abedsandeed/microblog
     env_file_path: "./.env"
     healthcheck_url: "http://{{ hostvars[inventory_hostname].ansible_host }}:8000/version"
+    microblog_tag: "{{ microblog_tag | default('1.0.0-prod') }}"
 
   tasks:
     - name: Pull latest Microblog image for this server
       docker_image:
-        name: "{{ microblog_image_prefix }}:1.0.0-prod"
+        name: "{{ microblog_image_prefix }}:{{ microblog_tag }}"
         source: pull
 
     - name: Stop old Microblog container
@@ -26,7 +27,7 @@
     - name: Start new Microblog container with new image
       docker_container:
         name: "{{ microblog_container_name }}"
-        image: "{{ microblog_image_prefix }}:1.0.0-prod"
+        image: "{{ microblog_image_prefix }}:{{ microblog_tag }}"
         state: started
         restart_policy: always
         env_file: "{{ env_file_path }}"

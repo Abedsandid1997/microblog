@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new Ansible playbook `deploy_update` that performs rolling updates
 - on application servers. This ensures minimal downtime during deployments
 - and updates the servers in a controlled sequence
+- pass microblog tag as argument to deploy_update.yml
 
 ## [11.3.4] - 2025-11-14
 
