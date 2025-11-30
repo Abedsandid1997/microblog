@@ -5,10 +5,7 @@ on:
     workflows: ["Continuous Delivery - Build & Push to Docker Hub"]
     types:
       - completed
-  push:
-    tags:
-      - 'v*.*.*'
-
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
