@@ -45,10 +45,11 @@
       until: result.status == 200
 
     - name: Verify running Microblog version
-      shell: curl -s "{{ healthcheck_url }}" | jq -r '.version'
+      shell: |
+        python3 -c "import json,sys; print(json.load(sys.stdin)['version'])" < <(curl -s "{{ healthcheck_url }}")
       register: version_result
 
     - name: Fail if version mismatch
       fail:
         msg: "Microblog version mismatch! Expected {{ microblog_tag }}, got {{ version_result.stdout }}"
-      when: version_result.stdout != microblog_tag | regex_replace('-prod$', '')
+      when: version_result.stdout != (microblog_tag | regex_replace('-prod$', ''))
