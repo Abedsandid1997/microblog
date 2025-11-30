@@ -50,7 +50,7 @@
 
     - name: Set short version as JSON
       set_fact:
-        microblog_short_tag: "{{ {'version': microblog_tag | regex_replace('-prod$', '') } | to_json }}"
+        microblog_short_tag: "{{ {'version': microblog_tag | regex_replace('-prod$', '') } | to_json | replace(' ', '') }}"
 
     - name: Fail if version mismatch
       fail:
