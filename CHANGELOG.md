@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+feat(site): Add database and microblog playbooks, store DATABASE_URL in .env
+
+- Created new playbooks for setting up database and microblog services.
+- Update site.yml to include database and microblog deployment tasks.
+- Automatically generate .env file with DATABASE_URL so it can be reused when updating the Microblog image.
+
 ### Add
 
 - Added playbook to deploy MySQL in Docker with persistent volume
