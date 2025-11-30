@@ -48,11 +48,16 @@
       shell: curl -s "{{ healthcheck_url }}"
       register: version_result
 
-    - name: Set short version as JSON
+    - name: Parse version JSON from curl
       set_fact:
-        microblog_short_tag: "{{ {'version': microblog_tag | regex_replace('-prod$', '') } | to_json | replace(' ', '') }}"
+        version_result_dict: "{{ version_result.stdout | from_json }}"
+
+    - name: Set expected version as dict
+      set_fact:
+        microblog_short_tag_dict:
+          version: "{{ microblog_tag | regex_replace('-prod$', '') }}"
 
     - name: Fail if version mismatch
       fail:
-        msg: "Microblog version mismatch! Expected {{ microblog_short_tag }}, got {{ version_result.stdout }}"
-      when: version_result.stdout != microblog_short_tag
+        msg: "Microblog version mismatch! Expected {{ microblog_short_tag_dict }}, got {{ version_result_dict }}"
+      when: version_result_dict != microblog_short_tag_dict
