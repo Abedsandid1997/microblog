@@ -16,7 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
+    - name: Extract tag name from triggering workflow
+      run: echo "TAG=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
+      
     - name: Setup Python & Cache pip
       uses: actions/setup-python@v5
       with:
@@ -43,6 +45,6 @@ jobs:
     - name: Run deploy playbook
       run: |
         cd ansible/
-        ansible-playbook -i hosts deploy_update.yml --private-key=/home/runner/.ssh/id_rsa -e "microblog_tag=${GITHUB_REF#refs/tags/}"
+        ansible-playbook -i hosts deploy_update.yml --private-key=/home/runner/.ssh/id_rsa -e "microblog_tag=${TAG}-prod"
       env:
         ANSIBLE_HOST_KEY_CHECKING: "False"
