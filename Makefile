@@ -231,3 +231,8 @@ trivy-image:
 .PHONY: trivy-fs
 trivy-fs:
 	trivy fs --scanners vuln,secret,misconfig --skip-dirs .venv .
+
+## target: dockle                     - Run dockle security scanner on docker image
+.PHONY: dockle
+dockle:
+	dockle --ignore DKL-DI-0004 microblog:prod

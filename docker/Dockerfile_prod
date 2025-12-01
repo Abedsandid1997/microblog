@@ -24,7 +24,7 @@ RUN <<-EOF
     python -m pip install --upgrade pip setuptools wheel 
     python -m venv .venv
     .venv/bin/pip install --upgrade pip setuptools wheel
-    .venv/bin/pip install -r requirements.txt
+    .venv/bin/pip install --no-cache-dir -r requirements.txt
 EOF
 
 ENV FLASK_APP microblog.py
@@ -37,4 +37,8 @@ EOF
 USER microblog
 
 EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s \
+    CMD curl -f http://localhost:5000/version || exit 1
+
 ENTRYPOINT ["./boot.sh"]
