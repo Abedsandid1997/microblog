@@ -221,3 +221,13 @@ install-deploy:
 .PHONY: bandit
 bandit:
 	bandit -r app
+
+## target: trivy image                      - Run trivy SAST scanner on docker image
+.PHONY: trivy-image
+trivy-image:
+	trivy image --scanners vuln,secret,misconfig abedsandeed/microblog:prod
+
+## target: trivy fs                     - Run trivy SAST scanner on filesystem
+.PHONY: trivy-fs
+trivy-fs:
+	trivy fs --scanners vuln,secret,misconfig --skip-dirs .venv .
