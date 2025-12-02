@@ -2,17 +2,13 @@ name: Continuous Delivery - Build & Push to Docker Hub
 
 on:
   workflow_call:
-     inputs:
-      version:
+    secrets:
+      DOCKERHUB_USERNAME:
         required: true
-        type: string
-      dockerhub_username:
+        description: 'Docker Hub username'
+      DOCKERHUB_TOKEN:
         required: true
-        type: string
-      dockerhub_token:
-        required: true
-        type: string
-
+        description: 'Docker Hub access token'
   push:
     tags:
       - "v*.*.*"
