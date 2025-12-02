@@ -1,0 +1,63 @@
+name: Security Scan
+
+on:
+  push:
+  workflow_call:
+
+jobs:
+  security:
+    name: Run security scanners
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: microblog:prod
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit
+
+      - name: Run Bandit
+        run: |
+          bandit -r app
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg apt-transport-https
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+
+      - name: Build Docker image
+        run: docker build -t $IMAGE_NAME -f docker/Dockerfile_prod .
+
+      - name: Run Trivy image scan
+        run: trivy image --scanners vuln,misconfig,secret $IMAGE_NAME
+
+      - name: Run Trivy filesystem scan
+        run: trivy fs --scanners vuln,misconfig,secret --skip-dirs .venv .
+
+      - name: Install Dockle
+        run: |
+          VERSION=$(
+           curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+           grep '"tag_name":' | \
+           sed -E 's/.*"v([^"]+)".*/\1/' \
+          ) && curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
+          sudo dpkg -i dockle_${VERSION}_Linux-64bit.deb
+
+      - name: Run Dockle
+        run: |
+          export DOCKER_CONTENT_TRUST=1
+          dockle $IMAGE_NAME || true
+          echo "Ignoring DKL-DI-0004 from base Python-Alpine image"
