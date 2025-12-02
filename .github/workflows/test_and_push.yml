@@ -1,6 +1,7 @@
 name: Continuous Delivery - Build & Push to Docker Hub
 
 on:
+  workflow_call:
   push:
     tags:
       - "v*.*.*"
