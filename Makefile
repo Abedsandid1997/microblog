@@ -231,7 +231,7 @@ trivy-image:
 ## target: trivy fs                     - Run trivy SAST scanner on filesystem
 .PHONY: trivy-fs
 trivy-fs:
-	trivy fs --scanners vuln,secret,misconfig --skip-dirs .venv .
+	docker run --rm -v .:/repo -w /repo aquasec/trivy:latest fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 --no-progress --skip-dirs .venv,venv .
 
 ## target: dockle                     - Run dockle security scanner on docker image
 .PHONY: dockle
@@ -241,4 +241,4 @@ dockle:
 		sed -E 's/.*"v([^"]+)".*/\1/') && \
 	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
 		goodwithtech/dockle:v$${VERSION} --ignore DKL-DI-0004 abedsandeed/microblog:prod
-	docker run --rm -v .:/repo -w /repo aquasec/trivy:latest fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 --no-progress --skip-dirs .venv,venv .
+	
