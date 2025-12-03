@@ -29,23 +29,14 @@ jobs:
         run: |
           bandit -r app
 
-      - name: Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg apt-transport-https
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
-          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update
-          sudo apt-get install trivy
-
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME -f docker/Dockerfile_prod .
 
       - name: Run Trivy image scan
-        run: trivy image --scanners vuln,misconfig,secret $IMAGE_NAME
+        run: docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --scanners vuln,secret,misconfig --no-progress --severity HIGH,CRITICAL --exit-code 1 $IMAGE_NAME
 
       - name: Run Trivy filesystem scan
-        run: trivy fs --scanners vuln,misconfig,secret --skip-dirs .venv .
+        run: docker run --rm -v .:/repo -w /repo aquasec/trivy:latest fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 --no-progress --skip-dirs .venv,venv .
 
       - name: Install Dockle
         run: |
@@ -59,5 +50,9 @@ jobs:
       - name: Run Dockle
         run: |
           export DOCKER_CONTENT_TRUST=1
-          dockle $IMAGE_NAME || true
-          echo "Ignoring DKL-DI-0004 from base Python-Alpine image"
+          VERSION=$(curl -s https://api.github.com/repos/goodwithtech/dockle/releases/latest | \
+            grep '"tag_name":' | \
+            sed -E 's/.*"v([^"]+)".*/\1/')
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            goodwithtech/dockle:v${VERSION} --ignore DKL-DI-0004 $IMAGE_NAME
+          
