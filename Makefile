@@ -216,3 +216,8 @@ install-deploy:
 	${pip} install -r requirements/deploy.txt
 	${pip} install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements.txt
 	cd ansible && ansible-galaxy install -r requirements.yml
+
+## target: bandit                       - Run Bandit SAST scanner on app/ folder
+.PHONY: bandit
+bandit:
+	bandit -r app
