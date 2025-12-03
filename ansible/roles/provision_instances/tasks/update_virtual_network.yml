@@ -1,0 +1,13 @@
+---
+- name: Attach Security Group to existing NIC
+  azure_rm_networkinterface:
+    resource_group: "{{ resource_group }}"
+    name: "{{ iname }}-NIC"
+    virtual_network: "microblog-Vnet"
+    subnet: "microblog-Subnet"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: "{{ iname }}-ip"
+    security_group: "{{ itype }}-sg"
+    tags: "{{ vmtags }}"
+    state: present
