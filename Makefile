@@ -225,9 +225,10 @@ bandit:
 ## target: trivy image                      - Run trivy SAST scanner on docker image
 .PHONY: trivy-image
 trivy-image:
-	trivy image --scanners vuln,secret,misconfig abedsandeed/microblog:prod
+	docker build  -t microblog:latest -f docker/Dockerfile_prod .
+	docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --scanners vuln,secret,misconfig --no-progress --severity HIGH,CRITICAL --exit-code 1 microblog:latest
 
 ## target: trivy fs                     - Run trivy SAST scanner on filesystem
 .PHONY: trivy-fs
 trivy-fs:
-	trivy fs --scanners vuln,secret,misconfig --skip-dirs .venv .
+	docker run --rm -v .:/repo -w /repo aquasec/trivy:latest fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 --no-progress --skip-dirs .venv,venv .
