@@ -1,20 +1,25 @@
 name: Deploy microblog
 
 on:
-  workflow_run:
-    workflows: ["Continuous Delivery - Build & Push to Docker Hub"]
-    types:
-      - completed
-      
+    push:
+      tags:
+        - "v*.*.*"
 jobs:
+  cd:
+    uses: ./.github/workflows/test_and_push.yml
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    
   deploy:
+    needs: cd
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || startsWith(github.ref, 'refs/tags/') }}
-
+    
     steps:
     - uses: actions/checkout@v4
-    - name: Extract tag name from triggering workflow
-      run: echo "TAG=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
+    - name: Extract version from tag
+      id: get_version
+      run: echo "version=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
       
     - name: Setup Python & Cache pip
       uses: actions/setup-python@v5
@@ -42,6 +47,6 @@ jobs:
     - name: Run deploy playbook
       run: |
         cd ansible/
-        ansible-playbook -i hosts deploy_update.yml --private-key=/home/runner/.ssh/id_rsa -e "microblog_tag=${TAG}-prod"
+        ansible-playbook -i hosts deploy_update.yml --private-key=/home/runner/.ssh/id_rsa -e "microblog_tag=${{ steps.get_version.outputs.version }}-prod"
       env:
         ANSIBLE_HOST_KEY_CHECKING: "False"
