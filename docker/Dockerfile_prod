@@ -1,5 +1,7 @@
-FROM python:3.8-alpine
+FROM python:3.11.14-alpine
 RUN adduser -D microblog
+
+RUN apk update && apk upgrade --no-cache
 
 WORKDIR /home/microblog
 
@@ -13,9 +15,16 @@ ARG APP_VERSION="unknown"
 
 ENV APP_VERSION=${APP_VERSION}
 
+# RUN <<-EOF
+#     python -m venv .venv
+#     .venv/bin/pip3 install -r requirements.txt
+# EOF
+
 RUN <<-EOF
+    python -m pip install --upgrade pip setuptools wheel 
     python -m venv .venv
-    .venv/bin/pip3 install -r requirements.txt
+    .venv/bin/pip install --upgrade pip setuptools wheel
+    .venv/bin/pip install -r requirements.txt
 EOF
 
 ENV FLASK_APP microblog.py
