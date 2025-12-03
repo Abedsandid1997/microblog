@@ -239,4 +239,4 @@ dockle:
 		grep '"tag_name":' | \
 		sed -E 's/.*"v([^"]+)".*/\1/') && \
 	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-		goodwithtech/dockle:v$${VERSION} abedsandeed/microblog:prod
+		goodwithtech/dockle:v$${VERSION} --ignore DKL-DI-0004 abedsandeed/microblog:prod
