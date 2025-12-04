@@ -38,15 +38,6 @@ jobs:
       - name: Run Trivy filesystem scan
         run: docker run --rm -v .:/repo -w /repo aquasec/trivy:latest fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 --no-progress --skip-dirs .venv,venv .
 
-      - name: Install Dockle
-        run: |
-          VERSION=$(
-           curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
-           grep '"tag_name":' | \
-           sed -E 's/.*"v([^"]+)".*/\1/' \
-          ) && curl -L -o dockle.deb https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.deb
-          sudo dpkg -i dockle_${VERSION}_Linux-64bit.deb
-
       - name: Run Dockle
         run: |
           export DOCKER_CONTENT_TRUST=1
