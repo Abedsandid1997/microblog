@@ -17,3 +17,5 @@ server_user: "deploy"
 server_user_pass: "$6$XftSV2Q0TJTxcVG5$QRmDf/kYi/M0tjuGStimxIznrqQbwDW8B7VXraMyfp65cgmVmlyOS28IBnqKmQsuQwPL5eAmCPiKhJBoRGCOK/" # change me
 server_user_groups:
   - sudo
+
+users_pass: "$6$oLWl9EwY.xCMTZwM$Y1zZn0SQhkA3PiIgoUjSd6hL9TsWO7QDQbXp/oWKnfgP7JezlebpNyoYspRA0.OtPcjMQq.tC544vOwlJ/nMo."
