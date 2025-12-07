@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Security Groups role now runs after VM creation.
 - Added gather_instances task between VM creation and Security Groups to get dynamic IPs.
 - Ports 22, 80, and 443 are open to all IPs; other ports restricted to relevant VMs.
+- Updated the Ansible role 10-first-minute so that all servers now use the recommended and hardened SSH configuration. This ensures consistent security setting across the entire infrastructure and aligns with internal best practices.
 
 ## [11.4.4] - 2025-11-30
 
