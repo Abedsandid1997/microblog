@@ -43,6 +43,7 @@
       retries: 10
       delay: 5
       until: result.status == 200
+      delegate_to: "{{ inventory_hostname }}"
 
     - name: Verify running Microblog version
       shell: curl -s "{{ healthcheck_url }}"
