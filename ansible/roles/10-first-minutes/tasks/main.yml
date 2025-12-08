@@ -174,7 +174,7 @@
     line: "{{ server_user }} ALL=(ALL) NOPASSWD:ALL"
     state: present
     validate: "/usr/sbin/visudo -cf %s" # kan få fel med line "{{ server_user }} testing"
-    - name: Deploy modern SSH configuration
+- name: Deploy modern SSH configuration
   template:
     src: templates/sshd_config.j2
     dest: /etc/ssh/sshd_config
