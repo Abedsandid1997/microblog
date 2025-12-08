@@ -9,7 +9,7 @@
     microblog_container_name: microblog
     microblog_image_prefix: abedsandeed/microblog
     env_file_path: "./.env"
-    healthcheck_url: "http://{{ hostvars[inventory_hostname].ansible_host }}:8000/version"
+    healthcheck_url: "http://localhost:8000/version"
     microblog_tag: "{{ microblog_tag | default('1.0.0-prod') }}"
 
   tasks:
