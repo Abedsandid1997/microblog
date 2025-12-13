@@ -3,7 +3,37 @@
   apt:
     name: "{{ packages }}"
     state: present
+# -----------------------------------------------
+- name: Remove broken apt certbot (if exists)
+  apt:
+    name: python3-certbot-nginx
+    state: absent
 
+- name: Install Snap Core
+  command: snap install core
+  register: snap_core_result
+  changed_when: "'installed' in snap_core_result.stdout"
+  failed_when: snap_core_result.rc != 0 and 'already installed' not in snap_core_result.stderr
+
+- name: Refresh Snap Core
+  command: snap refresh core
+  changed_when: false
+  ignore_errors: yes
+
+- name: Install Certbot via Snap
+  command: snap install --classic certbot
+  register: snap_certbot_result
+  changed_when: "'installed' in snap_certbot_result.stdout"
+  failed_when: snap_certbot_result.rc != 0 and 'already installed' not in snap_certbot_result.stderr
+
+- name: Link Certbot command
+  file:
+    src: /snap/bin/certbot
+    dest: /usr/bin/certbot
+    state: link
+    force: yes
+
+# ------------------------------------------------------------------
 - name: Check if certificate already exists.
   stat:
     path: /etc/letsencrypt/live/{{ domain_name }}/cert.pem

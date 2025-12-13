@@ -1,7 +1,9 @@
-- hosts: appserver
+- hosts: monitoring
   remote_user: "deploy"
   become: yes
   become_method: sudo
   roles:
     # - docker
-    - microblog
+    - alertmanager
+    - prometheus
+    - grafana

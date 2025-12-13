@@ -1,0 +1,28 @@
+---
+- name: Skapa mapp för Alertmanager-konfiguration
+  file:
+    path: "{{ alertmanager_config_path | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Skapa alertmanager.yml från template
+  template:
+    src: "alertmanager.yml.j2"
+    dest: "{{ alertmanager_config_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Starta Alertmanager container
+  community.docker.docker_container:
+    name: alertmanager
+    image: "{{ alertmanager_image }}"
+    restart_policy: "{{ alertmanager_restart }}"
+    ports:
+      - "{{ alertmanager_port }}:9093"
+    volumes:
+      - "{{ alertmanager_config_path }}:/etc/alertmanager/alertmanager.yml"
+    command: "--config.file=/etc/alertmanager/alertmanager.yml"
+    state: started

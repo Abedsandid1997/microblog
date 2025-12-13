@@ -1,0 +1,36 @@
+---
+- name: Pull Node Exporter Docker image
+  docker_image:
+    name: "prom/node-exporter:v1.2.2"
+    source: pull
+    force_source: yes
+
+- name: Create Node Exporter container with host networking
+  docker_container:
+    name: node-exporter
+    image: "prom/node-exporter:v1.2.2"
+    state: started
+    restart_policy: unless-stopped
+    network_mode: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    ports:
+      - "9100:9100"
+
+- name: Verify container is accessible
+  wait_for:
+    port: 9100
+    host: "{{ ansible_default_ipv4.address }}"
+    timeout: 30
+    state: started
+
+- name: Display Node Exporter endpoints for Prometheus
+  debug:
+    msg: "Node Exporter endpoint: http://{{ ansible_default_ipv4.address }}:9100/metrics"

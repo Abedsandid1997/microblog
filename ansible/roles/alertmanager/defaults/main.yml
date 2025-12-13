@@ -1,0 +1,6 @@
+---
+alertmanager_image: "prom/alertmanager:v0.23.0"
+alertmanager_port: 9093
+alertmanager_config_path: "/opt/alertmanager/config/alertmanager.yml"
+alertmanager_restart: "unless-stopped"
+alertmanager_webhook_url: "https://webhook.site/9484f3cd-aae0-481b-9f2a-31c79184db99"
