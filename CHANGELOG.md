@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Add
+
+- Added a new monitoring VM via Ansible provisioning
+- Opened required ports in security groups for Prometheus, Grafana and Alertmanager
+- Installed and started Prometheus, Grafana and Alertmanager using Ansible roles
+- Configured Prometheus scraping for microblog, node_exporter and self-monitoring
+- Added alert rules to detect application errors (HTTP 500)
+- Configured Alertmanager with webhook receiver to send alerts to webhook.site
+- Added Grafana datasource via Ansible Grafana datasource module
+- Configured Nginx reverse proxy to expose Grafana at /grafana
+- Implemented a new microblog endpoint to deliberately trigger errors for testing
+- Ensured application errors are visualized in Grafana dashboards
+
 ## [11.5.4] - 2025-12-08
 
 ### Add
