@@ -1,5 +1,4 @@
 lb_method: round
 packages:
   - nginx
-  - snapd
-  # -   python3-certbot-nginx
+  - python3-certbot-nginx

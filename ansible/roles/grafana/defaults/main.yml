@@ -2,5 +2,3 @@ grafana_data_dir: "/var/lib/grafana"
 
 grafana_admin_user: "admin"
 grafana_admin_password: "admin"
-
-grafana_dashboard_id: 7587

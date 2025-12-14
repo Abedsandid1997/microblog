@@ -135,7 +135,7 @@ def app_version():
 @bp.route("/trigger_error")
 def trigger_error():
     time.sleep(10)  # Vänta 10 sekunder
-    return "Error for testing monitoring", 500
+    return "Error for testing monitoring", 200
 
 @bp.route("/error_test")
 def error_test():
