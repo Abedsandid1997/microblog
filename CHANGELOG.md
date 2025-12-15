@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.6.4] - 2025-12-15
+
 ### Add
 
 - Added a new monitoring VM via Ansible provisioning
