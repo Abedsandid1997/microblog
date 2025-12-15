@@ -10,6 +10,19 @@
 # python-dotenv==0.19.1
 # Werkzeug==2.0.1
 
+# Flask==2.3.2
+# SQLAlchemy==1.4.50
+# Flask-Bootstrap==3.3.7.1
+# Flask-Login==0.6.3
+# Flask-Migrate==4.0.0
+# Flask-Moment==1.0.2
+# Flask-SQLAlchemy==3.0.5
+# Flask-WTF==1.2.1
+# email_validator==2.1.0
+# python-dotenv==1.0.0
+# Werkzeug==2.3.7
+# prometheus-flask-exporter==0.23.2
+
 Flask==2.3.2
 SQLAlchemy==1.4.50
 Flask-Bootstrap==3.3.7.1
@@ -21,3 +34,4 @@ Flask-WTF==1.2.1
 email_validator==2.1.0
 python-dotenv==1.0.0
 Werkzeug==3.1.4
+prometheus-flask-exporter==0.23.2

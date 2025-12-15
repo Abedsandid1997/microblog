@@ -8,7 +8,7 @@ from app import db
 from app.main.forms import EditProfileForm, PostForm
 from app.models import User, Post
 from app.main import bp
-
+import time
 
 
 @bp.before_request
@@ -131,3 +131,12 @@ def app_version():
     """
     version = current_app.config.get("APP_VERSION", "unknown")
     return {"version": version}, 200
+
+@bp.route("/trigger_error")
+def trigger_error():
+    time.sleep(10)  # Vänta 10 sekunder
+    return "Error for testing monitoring", 200
+
+@bp.route("/error_test")
+def error_test():
+    raise RuntimeError("Triggered test error for monitoring")

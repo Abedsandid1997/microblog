@@ -1,0 +1,39 @@
+groups:
+  - name: Microblog Error Alerts
+    rules:
+      - alert: MicroblogError
+        expr: increase(flask_http_request_total{status="500"}[1m]) > 0
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Microblog app has errors!"
+      
+      - alert: MicroblogSlowResponse
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (
+              rate(flask_http_request_duration_seconds_bucket[1m])
+            )
+          ) >= 9
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Microblog API is slow"
+          description: "95th percentile response time is >= 10 seconds"
+
+      - alert: MicroblogSlowRequest
+        expr: |
+          (
+            increase(flask_http_request_duration_seconds_sum[1m])
+            /
+            increase(flask_http_request_duration_seconds_count[1m])
+          ) > 9
+        for: 5s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Slow request detected"
+          description: "Average request latency exceeded 9 seconds"

@@ -1,0 +1,6 @@
+---
+prometheus_image: "prom/prometheus:v2.31.1"
+prometheus_container_name: "prometheus"
+prometheus_data_dir: "/var/lib/prometheus"
+prometheus_config_dir: "/etc/prometheus"
+prometheus_port: 9090

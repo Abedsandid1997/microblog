@@ -1,8 +1,10 @@
 ---
--   hosts:
-        -   devops
-    remote_user: azureuser
-    become: yes
-    become_method: sudo
-    roles:
-        -   10-first-minutes
+- hosts:
+    - devops
+  remote_user: azureuser
+  become: yes
+  become_method: sudo
+  roles:
+    - docker
+    - node_exporter
+    - 10-first-minutes
