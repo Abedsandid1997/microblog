@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Set up Microblog application in Kubernetes on AKS.
+- Added MySQL deployment with persistent storage and secrets.
+- Deployed Microblog with two replicas, service and ingress using HTTPS and custom domain.
+- Configured Horizontal Pod Autoscaler to enable automatic scaling based on CPU usage.
+
 ## [11.6.4] - 2025-12-15
 
 ### Add
